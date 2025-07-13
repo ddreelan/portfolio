@@ -114,7 +114,7 @@ analytics:
 # Site Author
 author:
   name             : "Daniel Dreelan"
-  avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "/assets/images/my-photo.jpg"
   bio              : "I am an **amazing** person."
   location         : "Perth, Australia"
   email            : "ddreelan7@gmail.com"
