@@ -12,14 +12,14 @@
 - title: "Follow Me"
   children:
     - title: "GitHub"
-      url: https://github.com/yourusername
+      url: https://github.com/ddreelan
       external: true
     - title: "LinkedIn"
-      url: https://linkedin.com/in/yourusername
+      url: https://linkedin.com/in/danny-dreelan
       external: true
-    - title: "Twitter"
-      url: https://twitter.com/yourhandle
+    - title: "Instagram"
+      url: https://instagram.com/dannydreelan
       external: true
-    - title: "YouTube"
-      url: https://youtube.com/@yourchannel
+    - title: "Facebook"
+      url: https://facebook.com/dannydreelan1
       external: true
