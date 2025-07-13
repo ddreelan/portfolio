@@ -1,26 +1,25 @@
-# main links
-main:
-  - title: "Follow Me"
+# _data/navigation.yml
+
+- title: "Home"
+  url: /
+
+- title: "Blog"
+  url: /blog/
+
+- title: "Portfolio"
+  url: /portfolio/
+
+- title: "Follow Me"
   children:
     - title: "GitHub"
-      url: https://github.com/ddreelan
+      url: https://github.com/yourusername
       external: true
-  #   - title: "LinkedIn"
-  #     url: https://linkedin.com/in/danny-dreelan
-  #     external: true
-  #   - title: "Instagram"
-  #     url: https://twitter.com/danny-dreelan
-  #     external: true
-  #   - title: "Facebook"
-  #     url: https://facebook.com/dannydreelan1
-  #     external: true
-  # - title: "Quick-Start Guide"
-  #   url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
-  # - title: "About"
-  #   url: https://mmistakes.github.io/minimal-mistakes/about/
-  # - title: "Sample Posts"
-  #   url: /year-archive/
-  # - title: "Sample Collections"
-  #   url: /collection-archive/
-  # - title: "Sitemap"
-  #   url: /sitemap/
+    - title: "LinkedIn"
+      url: https://linkedin.com/in/yourusername
+      external: true
+    - title: "Twitter"
+      url: https://twitter.com/yourhandle
+      external: true
+    - title: "YouTube"
+      url: https://youtube.com/@yourchannel
+      external: true
