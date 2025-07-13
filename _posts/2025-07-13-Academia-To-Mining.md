@@ -1,9 +1,12 @@
 ---
-layout: post
-title: From PhD to Mine Site
-subtitle: Why I traded the laptop for a hard hat, temporarily...
-tags: [career, engineering, mining, self-development, real-life]
-author: Danny Dreelan
+title: "Why I Switched from Academia to Mining"
+categories:
+  - career
+tags:
+  - engineering
+  - mining
+  - self-development
+  - real-life
 ---
 
 After years immersed in academia and computer-based work, I made a decision that raised more than a few eyebrows: I put down the research papers and picked up a torque wrench. I stepped into steel-capped boots and began working as a mechanical fitter in the heart of Australia's mining industry.
