@@ -1,19 +1,19 @@
 # main links
 main:
-  - title: "Follow Me"
-  children:
-    - title: "GitHub"
-      url: https://github.com/ddreelan
-      external: true
-    - title: "LinkedIn"
-      url: https://linkedin.com/in/danny-dreelan
-      external: true
-    - title: "Instagram"
-      url: https://twitter.com/danny-dreelan
-      external: true
-    - title: "Facebook"
-      url: https://facebook.com/dannydreelan1
-      external: true
+  # - title: "Follow Me"
+  # children:
+  #   - title: "GitHub"
+  #     url: https://github.com/ddreelan
+  #     external: true
+  #   - title: "LinkedIn"
+  #     url: https://linkedin.com/in/danny-dreelan
+  #     external: true
+  #   - title: "Instagram"
+  #     url: https://twitter.com/danny-dreelan
+  #     external: true
+  #   - title: "Facebook"
+  #     url: https://facebook.com/dannydreelan1
+  #     external: true
   # - title: "Quick-Start Guide"
   #   url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
   # - title: "About"
