@@ -1,10 +1,10 @@
 # main links
 main:
-  # - title: "Follow Me"
-  # children:
-  #   - title: "GitHub"
-  #     url: https://github.com/ddreelan
-  #     external: true
+  - title: "Follow Me"
+  children:
+    - title: "GitHub"
+      url: https://github.com/ddreelan
+      external: true
   #   - title: "LinkedIn"
   #     url: https://linkedin.com/in/danny-dreelan
   #     external: true
