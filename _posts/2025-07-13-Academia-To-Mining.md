@@ -1,5 +1,6 @@
 ---
 title: "Why I Switched from Academia to Mining"
+layouts: single
 categories:
   - career
 tags:
