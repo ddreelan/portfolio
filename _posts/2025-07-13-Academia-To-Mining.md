@@ -8,6 +8,7 @@ tags:
   - self-development
   - real-life
 ---
+<div style="padding-left: 2rem; padding-right: 2rem;">
 
 After years immersed in academia and computer-based work, I made a decision that raised more than a few eyebrows: I put down the research papers and picked up a torque wrench. I stepped into steel-capped boots and began working as a mechanical fitter in the heart of Australia's mining industry.
 
@@ -24,3 +25,5 @@ And honestly? I wanted to see the world. The flexibility and income from mining 
 So no, I didn’t “flake out.” I followed a different kind of logic—one rooted in growth, autonomy, and lived experience. 
 
 I believe the best engineers—and the best people—are forged through both ideas and action. For me, this path wasn’t a fallback. It was a step forward.
+
+</div>
