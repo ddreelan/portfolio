@@ -325,4 +325,4 @@ defaults:
       comments: # true
       share: true
       related: true
-      css: "/assets/css/custom.css"
+      # css: "/assets/css/custom.css"
