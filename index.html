@@ -6,13 +6,14 @@ header:
   overlay_filter: "0.5"
   overlay_image: /assets/images/sunrise.jpeg
   actions:
-    - label: "Github"
+    - label: "GitHub"
       url: "https://github.com/ddreelan"
+    - label: "View Data Science Portfolio"
+      url: "/portfolio/"
     - label: "Read Blog"
       url: "/blog/"
-excerpt: "My personal website showcasing my work from my academic career and data science projects."
+excerpt: "Mechanical Engineer • Mining Shutdown Fitter • Data Science Enthusiast — Bridging theory and practice in engineering and analytics."
 ---
-
 
 <hr style="margin-top: 80px;" />
 
@@ -23,19 +24,34 @@ excerpt: "My personal website showcasing my work from my academic career and dat
 
 <!-- 👤 Short Bio -->
 <div style="text-align: center; max-width: 700px; margin: 40px auto; font-size: 1.1rem;">
-  <p>Hi, I'm <strong>Danny Dreelan</strong> — a mechanical engineer and certified fitter with a PhD in Mechanical Engineering. I took a detour from academia to gain real-world experience in Australia's mining industry, pursuing hands-on skills and financial freedom through hard work and travel. My passion lies in bridging theory and practice.</p>
+  <p>Hi, I'm <strong>Danny Dreelan</strong> — a <strong>Mechanical Engineer</strong> (PhD) and <strong>certified fitter</strong> who thrives at the intersection of <strong>hands-on engineering</strong> and <strong>data-driven problem solving</strong>.</p>
+  <p>After completing my doctorate in mechanical & materials engineering, I pivoted from academia into the high-paced world of <strong>Australian mining shutdowns</strong>, where safety, precision, and efficiency are paramount. My journey blends <strong>theoretical expertise</strong> with <strong>real-world application</strong> — from advanced engineering analysis to physical plant maintenance and optimisation.</p>
+  <p>Beyond the tools and the lab, I explore <strong>data science, automation, and analytics</strong> to make engineering decisions smarter and faster.</p>
+</div>
+
+<!-- 🛠 Areas of Expertise -->
+<div style="max-width: 700px; margin: 0 auto; font-size: 1.05rem;">
+  <h2 style="text-align: center;">Areas of Expertise</h2>
+  <ul>
+    <li>Mechanical & Materials Engineering — Design, analysis, and optimisation</li>
+    <li>Mining Shutdown Maintenance — SAG/ball mill feed chute, liner changes, hard skirt adjustments</li>
+    <li>Safety Leadership — SWMS, JSEA, and permit-to-work compliance</li>
+    <li>Data Science — Python automation, analytics, machine learning</li>
+    <li>Tooling & Fabrication — Grinding, cutting, welding prep</li>
+  </ul>
 </div>
 
 <!-- 🎓 Education & Qualifications -->
-<div style="max-width: 600px; margin: 0 auto; font-size: 1.05rem;">
-  <h2 style="text-align: center;">Education & Qualifications</h2>
+<div style="max-width: 600px; margin: 2rem auto; font-size: 1.05rem;">
+  <h2 style="text-align: center;">Education & Certifications</h2>
   <ul>
-    <li>PhD in Mechanical Engineering</li>
-    <li>Master's in Mechanical Engineering</li>
-    <li>Bachelor's in Mechanical Engineering</li>
-    <li>Certificate III in Engineering – Mechanical Trade</li>
-    <li>High-Risk Work Licenses (e.g., EWP, Forklift)</li>
-    <li>Current Confined Space and Working at Heights</li>
+    <li>PhD in Mechanical & Materials Engineering — University College Dublin</li>
+    <li>Master's in Mechanical Engineering — University College Dublin - 1st Class Hons (4.0GPa)</li>
+    <li>Bachelor's in Mechanical Engineering -  University College Dublin - 1st Class Hons (4.0GPa) </li>
+    
+    <li>Certificate III in Engineering – Mechanical Trade - intech Institute of Technology (Australia)</li>
+    <li>High-Risk Work Licenses — Rigging, Dogman, EWP, Forklift</li>
+    <li>Confined Space & Working at Heights (current)</li>
   </ul>
 </div>
 
@@ -44,13 +60,13 @@ excerpt: "My personal website showcasing my work from my academic career and dat
 <h2 style="text-align: center;">Latest Blog Posts</h2>
 
 <ul class="posts-list" style="max-width: 800px; margin: 0 auto; padding: 0 1rem;">
-  {% for post in site.posts limit:3 %}
+  {% raw %}{% for post in site.posts limit:3 %}{% endraw %}
     <li style="margin-bottom: 2rem; list-style: none;">
       <h3>
-        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        <a href="{% raw %}{{ post.url | relative_url }}{% endraw %}">{% raw %}{{ post.title }}{% endraw %}</a>
       </h3>
-      <p style="color: #777; font-size: 0.9rem;">{{ post.date | date: "%B %d, %Y" }}</p>
-      <p>{{ post.excerpt | strip_html | truncate: 160 }}</p>
+      <p style="color: #777; font-size: 0.9rem;">{% raw %}{{ post.date | date: "%B %d, %Y" }}{% endraw %}</p>
+      <p>{% raw %}{{ post.excerpt | strip_html | truncate: 160 }}{% endraw %}</p>
     </li>
-  {% endfor %}
+  {% raw %}{% endfor %}{% endraw %}
 </ul>
