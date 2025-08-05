@@ -1,3 +1,14 @@
+---
+title: "Gmail to Google Calendar Automation"
+layout: single
+classes: wide
+tags:
+  - Python
+  - Data Science
+  - Automation
+author_profile: true
+---
+
 ## 🔧 Gmail Job Scanner Web App for Mechanical Fitter Roles
 
 This Jupyter Notebook automates the end-to-end process of identifying FIFO shutdown job opportunities for mechanical fitters directly from your Gmail inbox.
