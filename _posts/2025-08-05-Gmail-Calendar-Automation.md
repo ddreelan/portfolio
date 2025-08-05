@@ -1,18 +1,12 @@
 ---
-title: "An automated Gmail - GPT - Calendar python application"
-layouts: single
-categories:
-  - ai
-  - software
-  - data-analysis
+title: "Gmail to Google Calendar Automation"
+layout: single
+classes: wide
 tags:
-  - engineering
-  - mining
-  - self-development
-  - automation
-  - python
-  - AI
-  - OpenAI
+  - Python
+  - Data Science
+  - Automation
+author_profile: true
 ---
 
 ## 🔧 Gmail Job Scanner Web App for Mechanical Fitter Roles
