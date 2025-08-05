@@ -6,8 +6,8 @@
 - title: "Blog"
   url: /blog/
 
-- title: "Portfolio"
-  url: /portfolio/
+- title: "Try my Notebooks!"
+  url: /lite/
 
 - title: "Follow Me"
   children:
