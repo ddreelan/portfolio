@@ -60,13 +60,13 @@ excerpt: "Mechanical Engineer • Mining Shutdown Fitter • Data Science Enthus
 <h2 style="text-align: center;">Latest Blog Posts</h2>
 
 <ul class="posts-list" style="max-width: 800px; margin: 0 auto; padding: 0 1rem;">
-  {% raw %}{% for post in site.posts limit:3 %}{% endraw %}
+  {% for post in site.posts limit:3 %}
     <li style="margin-bottom: 2rem; list-style: none;">
       <h3>
-        <a href="{% raw %}{{ post.url | relative_url }}{% endraw %}">{% raw %}{{ post.title }}{% endraw %}</a>
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
       </h3>
-      <p style="color: #777; font-size: 0.9rem;">{% raw %}{{ post.date | date: "%B %d, %Y" }}{% endraw %}</p>
-      <p>{% raw %}{{ post.excerpt | strip_html | truncate: 160 }}{% endraw %}</p>
+      <p style="color: #777; font-size: 0.9rem;">{{ post.date | date: "%B %d, %Y" }}</p>
+      <p>{{ post.excerpt | strip_html | truncate: 160 }}</p>
     </li>
-  {% raw %}{% endfor %}{% endraw %}
+  {% endfor %}
 </ul>
