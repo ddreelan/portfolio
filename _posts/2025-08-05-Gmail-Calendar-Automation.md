@@ -9,6 +9,24 @@ tags:
 author_profile: true
 ---
 
+# Interactive Notebook
+
+This launches a live coding environment for the below notebook. 
+
+Powered by [Binder](https://mybinder.org).
+
+<div style="margin: 2em 0;">
+  <a href="https://gesis.mybinder.org/v2/gh/ddreelan/GmailToCal/main?urlpath=lab/tree/GmailToCalendar.ipynb
+" 
+     class="btn btn--primary btn--large" target="_blank">
+    🚀 Launch Interactive Notebook
+  </a>
+</div>
+
+This may take 30–60 seconds to load. Once open, you can run cells, make changes, and save your work.
+
+---
+
 ## 🔧 Gmail Job Scanner Web App for Mechanical Fitter Roles
 
 This Jupyter Notebook automates the end-to-end process of identifying FIFO shutdown job opportunities for mechanical fitters directly from your Gmail inbox.
@@ -45,6 +63,18 @@ This app performs the following steps:
    Record all job offers in a spreadsheet for real time and future data analysis.
 
 ---
+
+<a id="shut-up"></a>
+# SHUT UP AND JUST RUN IT?? 
+![image.png](attachment:image.png)
+
+Slow down tiger... you will need to get your private keys first:
+1. Google OAuth: Access to your Gmail, Calendar and Spreadsheets [Follow this](#google-auth)
+2. OpenAPI key: **not free 😢** Every time you use the GPT model it will charge you some credits [Follow this](#openai-auth)
+3. Calendar ID: Tell it what calendar to put the events in. [Follow this](#cal-id)
+4. Spreadsheet ID: Tell it where to record your job entries. [Follow this](#spreadsheet-id)
+
+Once you have all these, you are ready to run it. Edit the [main program](#main-section) if desired, then click Toolbar: `Cell` > `Run All`
 
 ## 📦 Step 1: Install Required Python Packages
 
@@ -101,7 +131,9 @@ There are **two modes of authentication** depending on your environment:
 
 ---
 
+<a id="google-auth"></a>
 ### 🔹 Local Mode (Interactive)
+[Go back to the top](#shut-up)
 
 If you're running the script locally:
 
@@ -188,83 +220,96 @@ The script will create:
 import os
 import base64
 import json
-from datetime import datetime, timedelta
+import getpass
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from dotenv import load_dotenv
 
-# Define the scopes
+from dotenv import load_dotenv
+load_dotenv()
+
+# Google API scopes
 SCOPES = [
     'https://www.googleapis.com/auth/gmail.readonly',
     'https://www.googleapis.com/auth/calendar',
     "https://www.googleapis.com/auth/spreadsheets"
 ]
 
-# Only load .env if not running in GitHub Actions
-if not os.getenv("GITHUB_ACTIONS"):
-    from dotenv import load_dotenv
-    load_dotenv()
-
-# Define the token and credentials file paths for if .env doesn't exist
-token_file_name = "token.json"
-cred_file_name = "credentials.json"
-
-
-def authenticate_google_services(scopes=SCOPES, token_file=token_file_name, cred_file=cred_file_name):
+def authenticate_google_services(scopes=SCOPES):
     creds = None
 
-    # Check if the credentials exist in the .env file
-    if os.getenv("GMAIL_API_TOKEN_BASE64"):
-        print("[INFO] Found token in .env file. Decoding and using it.")
-        token_json_str = base64.b64decode(os.getenv("GMAIL_API_TOKEN_BASE64")).decode('utf-8')
-        creds_dict = json.loads(token_json_str)
-        creds = Credentials.from_authorized_user_info(info=creds_dict, scopes=scopes)
+    # Detect Binder environment
+    IS_BINDER = "BINDER_SERVICE_PORT" in os.environ or "BINDER_REPO_URL" in os.environ
 
-    # If no token in .env, check if running in GitHub Actions
-    elif os.getenv("GITHUB_ACTIONS") == "true":
-        print("[INFO] Running in GitHub Actions. Loading credentials from env variable.")
-        token_json_str = base64.b64decode(os.getenv("GMAIL_API_TOKEN_BASE64")).decode('utf-8')
-        creds_dict = json.loads(token_json_str)
-        creds = Credentials.from_authorized_user_info(info=creds_dict, scopes=scopes)
+    if IS_BINDER:
+        print("[INFO] Binder environment detected.")
+        print("No local .env or token.json will be used.")
+        print("Choose authentication method:")
+        print("1. Paste Base64 token")
+        print("2. Paste JSON credentials")
+        print("3. Upload credentials.json in Binder file browser")
 
-    # Local environment: Check if token file exists
-    elif os.path.exists(token_file):
-        print(f"[INFO] Running locally. Loading token from {token_file}.")
-        creds = Credentials.from_authorized_user_file(token_file, scopes)
+        choice = input("Enter choice (1/2/3): ").strip()
 
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                print("[INFO] Starting OAuth flow for local user.")
-                flow = InstalledAppFlow.from_client_secrets_file(cred_file, scopes)
-                creds = flow.run_local_server(port=0)
-            with open(token_file, 'w') as token:
-                token.write(creds.to_json())
+        if choice == "1":
+            token_b64 = getpass.getpass("Paste your Base64-encoded token: ")
+            token_json_str = base64.b64decode(token_b64).decode("utf-8")
+            creds_dict = json.loads(token_json_str)
+            creds = Credentials.from_authorized_user_info(info=creds_dict, scopes=scopes)
 
-    # Local environment: Check if credential file exists (this is needed for init)
-    elif os.path.exists(cred_file):
-        print(f"[INFO] Running locally. First time using {cred_file}.")
+        elif choice == "2":
+            creds_json_str = getpass.getpass("Paste your Google OAuth JSON here (hidden input): ")
+            with open("binder_credentials.json", "w") as f:
+                f.write(creds_json_str)
+            flow = InstalledAppFlow.from_client_secrets_file("binder_credentials.json", scopes)
+            creds = flow.run_local_server(port=0)
 
-        flow = InstalledAppFlow.from_client_secrets_file(cred_file, SCOPES)
-        creds = flow.run_local_server(port=0)
+        elif choice == "3":
+            print("📂 Please upload your `credentials.json` using the Jupyter file browser.")
+            input("Press Enter once uploaded...")
+            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", scopes)
+            creds = flow.run_local_server(port=0)
 
-        # Save token.json for future use
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())        
+        else:
+            raise RuntimeError("Invalid choice. Please enter 1, 2, or 3.")
 
     else:
-        raise RuntimeError("No valid authentication method found.")
+        # Non-Binder environments — keep your existing .env / local file logic
+        if os.getenv("GMAIL_API_TOKEN_BASE64"):
+            print("[INFO] Found Base64 token in environment.")
+            token_json_str = base64.b64decode(os.getenv("GMAIL_API_TOKEN_BASE64")).decode("utf-8")
+            creds_dict = json.loads(token_json_str)
+            creds = Credentials.from_authorized_user_info(info=creds_dict, scopes=scopes)
 
-    # Build the service clients
+        elif os.path.exists("token.json"):
+            print("[INFO] Using local token.json")
+            creds = Credentials.from_authorized_user_file("token.json", scopes)
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+
+        elif os.path.exists("credentials.json"):
+            print("[INFO] Running OAuth flow using local credentials.json")
+            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", scopes)
+            creds = flow.run_local_server(port=0)
+            with open("token.json", "w") as token:
+                token.write(creds.to_json())
+
+        else:
+            raise RuntimeError("No valid authentication method found.")
+
+    # Build service clients
     gmail = build('gmail', 'v1', credentials=creds)
     calendar = build('calendar', 'v3', credentials=creds)
     sheets = build('sheets', 'v4', credentials=creds)
+
+    print("\n✅ Authentication successful! You can now use the Gmail, Calendar, and Sheets APIs.\n")
+
     return gmail, calendar, sheets
 
-# gmail_service, calendar_service, sheets_service = authenticate_google_services(SCOPES)
+
+# Example usage
+gmail_service, calendar_service, sheets_service = authenticate_google_services(SCOPES)
 ```
 
 ## Step 3: Fetch Recent Job-Related Emails
@@ -407,9 +452,21 @@ def fetch_recent_emails(gmail_service, time_delta_hours=1000, max_results=1000):
     return emails
 ```
 
+
+```python
+# Example usage
+# num_days = 0.1
+# num_hours = num_days * 24
+# max_emails = 10000
+# # max_emails = 1
+# emails = fetch_recent_emails(gmail_service, time_delta_hours=num_hours,max_results=max_emails)
+# print(f"\t{len(emails)} EMAILS RETRIEVED\n\n")
+```
+
 # Step 4: Use OpenAI GPT to extract the job details
 
 ---
+<a id="openai-auth"></a>
 
 ## 🔑 How to Get Your `OPENAI_API_KEY`
 
@@ -462,11 +519,8 @@ Or add it as a GitHub Secret for GitHub Actions:
 
 
 ```python
-# Load API key
-OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
-# print(OPENAI_API_KEY)
-
 # Get current date in YYYY-MM-DD
+import time
 current_year = time.gmtime().tm_year 
 current_month = time.gmtime().tm_mon
 current_day = time.gmtime().tm_mday 
@@ -618,52 +672,54 @@ Return the following JSON object, with **all keys present**, even if empty:
 
 ---
 """
-# PROMPT_INSTRUCTIONS = f"""
-# You are an expert assistant for detecting job opportunities for **mechanical fitters** or **riggers** in **mining shutdowns** in Australia.
-
-# Analyze the full email thread content and return a structured JSON object **only if** there is a genuine and current work opportunity. Otherwise, return `"is_work_opportunity": false` and leave all other fields as empty lists.
-
-# ## Relevance Criteria
-# Only return a result if the email includes one of:
-# - A job ad, invitation to apply, or request for availability
-# - Shutdown schedule confirmation or a start/end date
-# - (Ignore rosters)
-
-# ## Extraction Fields (all as **lists**):
-# - `workplace`: Names of mines/sites.
-# - `start_date`, `end_date`: Format as `YYYY-MM-DD`. Today is {current_date}.
-# - `day_shift_rate`, `night_shift_rate`: Float values (e.g., 655.00).
-# - `position`: "Fitter" or "Rigger".
-# - `clean_shaven`: True or False.
-# - `client_name`: Extract from sender's domain; take only the first part (e.g., from `downergroup.com.au` → `downergroup`).
-# - `contact_number`: Digits only, no spaces.
-# - `email_address`: Valid contact emails.
-
-# > Ensure all lists are the same length. Duplicate or align entries as needed. Use dummy values if specific details are missing.
-
-# ## Output Format
-# Return the following JSON object with **all keys present**, even if values are empty:
-# {{
-#   "is_work_opportunity": true,
-#   "workplace": [...],
-#   "start_date": [...],
-#   "end_date": [...],
-#   "day_shift_rate": [...],
-#   "night_shift_rate": [...],
-#   "position": [...],
-#   "clean_shaven": [...],
-#   "client_name": [...],
-#   "contact_number": [...],
-#   "email_address": [...]
-# }}
-# """
 ```
 
 
 ```python
+import os
+import getpass
+
+def get_openai_api_key():
+    """
+    Securely get your OpenAI API key.
+
+    Checks for environment variable OPENAI_API_KEY first.
+    If not found, prompts user to paste it (hidden input).
+
+    Returns:
+        str: Your OpenAI API key.
+    """
+    # Try environment variable first (works locally or in CI)
+    api_key = os.getenv("OPENAI_API_KEY")
+    if api_key:
+        print("[INFO] Using OpenAI API key from environment variable.")
+        return api_key
+
+    # Otherwise prompt user (good for Binder or interactive notebook)
+    print("🔐 OpenAI API key not found in environment.")
+    api_key = getpass.getpass("Please paste your OpenAI API key here (input hidden): ")
+
+    if not api_key:
+        raise RuntimeError("No OpenAI API key provided.")
+
+    print("✅ OpenAI API key received securely.")
+    return api_key
+
+
+# Example usage:
+OPENAI_API_KEY = get_openai_api_key()
+```
+
+
+```python
+# Get OpenAI key
+OPENAI_API_KEY = get_openai_api_key()
 from openai import OpenAI
 client = OpenAI(api_key=OPENAI_API_KEY)
+```
 
+
+```python
 def query_gpt_model(email_body, MODEL="gpt-4o", INSTRUCTIONS=PROMPT_INSTRUCTIONS, INPUT=""):
     return client.responses.create(
         model=MODEL,
@@ -755,6 +811,12 @@ def process_emails_for_jobs(emails):
     return job_offers
 ```
 
+
+```python
+#- Pass the emails to GPT to extract job information
+# job_offers = process_emails_for_jobs(emails)
+```
+
 ---
 
 # Step 6: Manage Your Google Calendar for Job Scheduling
@@ -772,7 +834,28 @@ These helper functions let you:
 * Add job offers to your calendar with colour coding
 
 ---
+<a id="cal-id"></a>
 
+## 📅 How to Find Your Google Calendar ID
+[Go back to the top](#shut-up)
+
+I would suggest adding the calendar events to a separate calendar to your `'primary'` one.
+
+1. Open **Google Calendar** in your browser:  
+   [https://calendar.google.com](https://calendar.google.com)
+
+2. In the left sidebar, create or find the calendar you want to use.  
+   Hover over it and click **⋮ (Options)** → **Settings and sharing**.
+
+3. Scroll down to the **Integrate calendar** section.
+
+4. Look for **Calendar ID**.  
+   - For your main calendar, it’s usually your Gmail address (e.g., `you@gmail.com`).  
+   - For other calendars, it may look like `randomid@group.calendar.google.com`.
+
+5. Copy the **Calendar ID** and use it in your script or notebook.
+
+---
 ### **List All Your Google Calendars**
 
 Use this to see all the calendars linked to your Google account and get their IDs.
@@ -876,8 +959,39 @@ def list_google_calendars(calendar_service):
     for cal in calendars:
         print(f"{cal.get('summary')}\t: {cal.get('id')}")
 # list_google_calendars(calendar_service)
+```
 
-def clear_calendar(calendar_service, calendar_id=os.getenv("SHUTS_CALENDAR_ID")):
+
+```python
+import os
+
+def get_shuts_calendar_id():
+    """
+    Securely get your SHUTS_CALENDAR_ID.
+
+    Checks for environment variable SHUTS_CALENDAR_ID first.
+    If not found, prompts user to enter it (visible input).
+
+    Returns:
+        str: Your SHUTS_CALENDAR_ID.
+    """
+    calendar_id = os.getenv("SHUTS_CALENDAR_ID")
+    if calendar_id:
+        print("[INFO] Using SHUTS_CALENDAR_ID from environment variable.")
+        return calendar_id
+
+    calendar_id = input("Please enter your SHUTS_CALENDAR_ID (visible input) [For your main calendar, enter: 'primary']: ").strip()
+    if not calendar_id:
+        raise RuntimeError("No SHUTS_CALENDAR_ID provided.")
+
+    print("✅ SHUTS_CALENDAR_ID received.")
+    return calendar_id
+
+
+# Example usage:
+SHUTS_CALENDAR_ID = get_shuts_calendar_id()
+
+def clear_calendar(calendar_service, calendar_id=SHUTS_CALENDAR_ID):
     page_token = None
     while True:
         events = calendar_service.events().list(
@@ -954,7 +1068,7 @@ def safe_format_rate(value):
     except (ValueError, TypeError):
         return "N/A"
 
-def add_jobs_to_calendar(job_offers, calendar_service, calendar_id=os.getenv("SHUTS_CALENDAR_ID")):
+def add_jobs_to_calendar(job_offers, calendar_service, calendar_id=SHUTS_CALENDAR_ID):
     for job in job_offers:
         day_rate = safe_format_rate(job.get('day_shift_rate'))
         night_rate = safe_format_rate(job.get('night_shift_rate'))
@@ -1067,6 +1181,7 @@ These helper functions let you:
 
 In your `.env` file (or GitHub Secrets), store the Spreadsheet ID of your Google Sheet:
 
+<a id="spreadsheet-id"></a>
 ```env
 SPREADSHEET_ID=your_spreadsheet_id_here
 ```
@@ -1177,8 +1292,35 @@ Or in GitHub Actions Secrets:
 # The sheet/tab name to initialise
 SHEET_NAME = "Jobs"
 
-SPREADSHEET_ID=os.getenv("SPREADSHEET_ID")
+# SPREADSHEET_ID=os.getenv("SPREADSHEET_ID")
 
+def get_spreadsheet_id():
+    """
+    Securely get your SPREADSHEET_ID.
+
+    Checks for environment variable SPREADSHEET_ID first.
+    If not found, prompts user to enter it (visible input).
+
+    Returns:
+        str: Your SPREADSHEET_ID.
+    """
+    spreadsheet_id = os.getenv("SPREADSHEET_ID")
+    if spreadsheet_id:
+        print("[INFO] Using SPREADSHEET_ID from environment variable.")
+        return spreadsheet_id
+
+    spreadsheet_id = input("Please enter your SPREADSHEET_ID (visible input): ").strip()
+    if not spreadsheet_id:
+        raise RuntimeError("No SPREADSHEET_ID provided.")
+
+    print("✅ SPREADSHEET_ID received.")
+    return spreadsheet_id
+
+SPREADSHEET_ID = get_spreadsheet_id()
+```
+
+
+```python
 # Your desired column headers
 HEADERS = [
     "Workplace",
@@ -1322,16 +1464,6 @@ def add_jobs_to_sheet(job_offers, sheets_service, spreadsheet_id, sheet_name="Jo
 
 ```python
 # initialise_spreadsheet(sheets_service, SPREADSHEET_ID,"Jobs")
-```
-
-
-```python
-# Your spreadsheet ID (from Google Sheet URL)
-# SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
-# print(SPREADSHEET_ID)
-
-# # Call the function
-# add_jobs_to_sheet(job_offers, sheets_service, SPREADSHEET_ID, sheet_name="Jobs")
 ```
 
 ---
@@ -1485,6 +1617,11 @@ Run in GitHub Actions (automated daily):
 
 ---
 
+<a id="main-section"></a>
+# RUN THE MAIN FUNCTION 
+[Go back to the top](#shut-up)
+
+Edit the main function as desired. Typically you might want to set `num_days` how far back you want to read your emails, e.g. `num_days = 7`
 
 
 ```python
@@ -1505,137 +1642,20 @@ def main():
     print(f"\t{len(job_offers)} JOB OFFERS EXTRACTED\n\n")
     
     #- Create calendar entries for each job 
-    SHUTS_CALENDAR_ID=os.getenv("SHUTS_CALENDAR_ID")
+#     SHUTS_CALENDAR_ID=os.getenv("SHUTS_CALENDAR_ID")
 #     print("SHUTS_CALENDAR_ID", SHUTS_CALENDAR_ID)
+
     # Optionally clear the calendar of all entries for testing
 #     clear_calendar(calendar_service)
     add_jobs_to_calendar(job_offers,calendar_service)
     print("CALENDAR ENTRIES ADDED\n\n")
     
     #- Add jobs to a Google Sheet spreadsheet
-    SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
+#     SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
     add_jobs_to_sheet(job_offers, sheets_service, SPREADSHEET_ID, sheet_name="Jobs")
     
     pass
 
 if __name__ == "__main__":
     main()
-```
-
-# Testing
-
-
-```python
-#- Get access to gmail and calendar
-gmail_service, calendar_service, sheets_service = authenticate_google_services()
-print("\tGOOGLE AUTHENITICATED\n\n")
-```
-
-
-```python
-#- Get job offers from emails
-num_days = 0.1
-num_hours = num_days * 24
-max_emails = 10000
-# max_emails = 1
-emails = fetch_recent_emails(gmail_service, time_delta_hours=num_hours,max_results=max_emails)
-print(f"\t{len(emails)} EMAILS RETRIEVED\n\n")
-```
-
-
-```python
-print(emails[1]['sender'])
-```
-
-
-```python
-emails_test = []
-emails_test.append(emails[5])
-```
-
-
-```python
-#- Pass the emails to GPT to extract job information
-job_offers = process_emails_for_jobs(emails)
-print(f"\t{len(job_offers)} JOB OFFERS EXTRACTED\n\n")
-```
-
-
-```python
-for job in job_offers:
-#     print(json.dumps(job,indent=4))
-    print(job)
-```
-
-
-```python
-#- Create calendar entries for each job 
-SHUTS_CALENDAR_ID=os.getenv("SHUTS_CALENDAR_ID")
-print("SHUTS_CALENDAR_ID", SHUTS_CALENDAR_ID)
-# Optionally clear the calendar of all entries for testing
-#     clear_calendar(calendar_service)
-```
-
-
-```python
-gmail_service, calendar_service, sheets_service = authenticate_google_services()
-clear_calendar(calendar_service)
-```
-
-
-```python
-clear_calendar(calendar_service)
-add_jobs_to_calendar(job_offers,calendar_service)
-print("CALENDAR ENTRIES ADDED\n\n")
-```
-
-
-```python
-job = job_offers[0]
-
-# print(job)
-print(job['end_date'])
-
-# Add 1 day to the end date, as event ends at 00:00 of the end date
-end_date_obj = datetime.strptime(job['end_date'], "%Y-%m-%d").date() + timedelta(days=1)
-end_date = end_date_obj.strftime("%Y-%m-%d")  # convert back to string
-
-print(end_date)
-```
-
-
-```python
-clear_calendar(calendar_service)
-```
-
-
-```python
-job_offers_test = []
-job_offers_test.append(job_offers[0])
-
-job_offers_test[0]['start_date'] = "2025-08-04"
-# print(job_offers_test[0]['start_date'])
-
-job_offers_test[0]['end_date'] = "2025-08-05"
-# print(job_offers_test[0]['end_date'])
-# # print(job_offers_test)
-```
-
-
-```python
-add_jobs_to_calendar(job_offers_test,calendar_service)
-print("CALENDAR ENTRIES ADDED\n\n")
-```
-
-
-```python
-# Extract specific email for testing
-email
-for email in emails:
-    print(email['thread_id'])
-    if email['thread_id'] == "YzE4aDd0dXI5c3NndWtxN2Y4cjR2N2RpNWcgNWE0OWRiMDdmNzFkMGU5YmIwNDU3MmYzNTk2MTM4ZDUxYWE5NDg1Y2ExYjg2ZTg4NDQzYTkwNDJmOGEyMWU5ZUBn":
-        print(email)
-        email_test = email
-        pass
-# print(email_test)
 ```
