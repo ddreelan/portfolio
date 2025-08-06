@@ -7,8 +7,8 @@ classes: wide
 Here is an embedded JupyterLite notebook running entirely in the browser:
 
 <iframe
-  src="{{ '/lite/lab/index.html?path=files/GmailToCalendar.ipynb' | relative_url }}"
+  src="https://jupyterlite.github.io/demo/repl/index.html?kernel=python&toolbar=1"
   width="100%"
-  height="800"
-  style="border: 1px solid #ccc;">
+  height="500px"
+>
 </iframe>
