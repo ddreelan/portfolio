@@ -9,7 +9,7 @@ layout: single
 This launches a live coding environment powered by [Binder](https://mybinder.org).
 
 <div style="margin: 2em 0;">
-  <a href="https://hub.2i2c.mybinder.org/user/ddreelan-portfolio-o9qyjifr/doc/tree/assets/notebooks/GmailToCalendar.ipynb" 
+  <a href="https://hub.gesis.mybinder.org/user/ddreelan-gmailtocal-g15dx7bf/doc/tree/GmailToCalendar.ipynb" 
      class="btn btn--primary btn--large" target="_blank">
     🚀 Launch Interactive Notebook
   </a>
