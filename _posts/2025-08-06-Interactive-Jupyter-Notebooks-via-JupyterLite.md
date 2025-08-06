@@ -9,7 +9,7 @@ header_scripts:
 
 {% raw %}
 <jupyterlite-wasm
-  src="{{ '/assets/notebooks/my_notebook.ipynb' | relative_url }}"
+  src="{{ '/assets/notebooks/GmailToCalendar.ipynb' | relative_url }}"
   width="100%"
   height="600px">
 </jupyterlite-wasm>
