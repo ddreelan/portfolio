@@ -1,0 +1,29 @@
+{
+  "content": [
+    {
+      "content": null,
+      "created": "2025-08-06T02:07:40.893250Z",
+      "format": null,
+      "hash": null,
+      "hash_algorithm": null,
+      "last_modified": "2025-08-06T02:07:09.528429Z",
+      "mimetype": null,
+      "name": "GmailToCalendar.ipynb",
+      "path": "GmailToCalendar.ipynb",
+      "size": 66374,
+      "type": "notebook",
+      "writable": true
+    }
+  ],
+  "created": "2025-08-06T02:07:40.891668Z",
+  "format": "json",
+  "hash": null,
+  "hash_algorithm": null,
+  "last_modified": "2025-08-06T02:07:40.891668Z",
+  "mimetype": null,
+  "name": "",
+  "path": "",
+  "size": null,
+  "type": "directory",
+  "writable": true
+}
